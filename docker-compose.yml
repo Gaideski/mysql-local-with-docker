@@ -1,40 +1,40 @@
-version: "1.0"
+version: "1.0" # Docker Compose file format version. Generally, you won't need to change this.
 
 services:
   mysql_db:
-    image: mysql:latest
-    container_name: mysql_local
-    platform: linux/amd64 # Ensures compatibility across Mac (Intel/ARM with Rosetta) and Windows
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_DATABASE: database
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
+    image: mysql:latest # Specifies the Docker image to use. 'latest' gets the newest MySQL version. You can specify a different version (e.g., 'mysql:8.0') if needed for compatibility.
+    container_name: mysql_local # <--- CUSTOMIZABLE: The name of the MySQL container. Change this if you want a different name for your MySQL instance (e.g., 'my_project_mysql').
+    platform: linux/amd64 # Ensures compatibility across Mac (Intel/ARM with Rosetta) and Windows. Keep this as is for broad compatibility.
+    restart: unless-stopped # Defines the restart policy. 'unless-stopped' means the container will restart automatically unless explicitly stopped.
+    environment: # Environment variables passed to the MySQL container.
+      MYSQL_ROOT_PASSWORD: root_password # <--- CUSTOMIZABLE: The password for the 'root' user in MySQL. **Strongly recommended to change this to a secure, unique password for production environments.**
+      MYSQL_DATABASE: database # <--- CUSTOMIZABLE: The name of the default database that will be created when the MySQL container starts. Change this to your desired database name (e.g., 'my_app_db').
+      MYSQL_USER: user # <--- CUSTOMIZABLE: The username for a new user that will be created with access to the `MYSQL_DATABASE`. Change this to your desired username (e.g., 'app_user').
+      MYSQL_PASSWORD: password # <--- CUSTOMIZABLE: The password for the `MYSQL_USER`. **Strongly recommended to change this to a secure, unique password.**
     volumes:
-      - mysql_data:/var/lib/mysql
+      - mysql_data:/var/lib/mysql # This maps the named volume 'mysql_data' to MySQL's data directory inside the container. This ensures your database data persists even if the container is removed. You generally won't need to change this.
     ports:
-      - "3306:3306"
+      - "3306:3306" # <--- CUSTOMIZABLE (Host Port): Maps port 3306 on your host machine to port 3306 inside the MySQL container. The first '3306' is the host port. If port 3306 is already in use on your machine, you can change the first number (e.g., "3307:3306") to use a different host port. The second number (container port) should remain 3306 for MySQL.
     networks:
-      - mysql-network
+      - mysql-network # Connects the MySQL container to the 'mysql-network' for internal communication.
 
   adminer:
-    image: adminer:latest
-    container_name: adminer_web
-    platform: linux/amd64 # Ensures broad compatibility
-    restart: unless-stopped
+    image: adminer:latest # Specifies the Docker image for Adminer. 'latest' gets the newest version.
+    container_name: adminer_web # <--- CUSTOMIZABLE: The name of the Adminer container. Change this if you want a different name (e.g., 'my_adminer').
+    platform: linux/amd64 # Ensures broad compatibility. Keep this as is.
+    restart: unless-stopped # Defines the restart policy for Adminer.
     ports:
-      - "8080:8080"
+      - "8080:8080" # <--- CUSTOMIZABLE (Host Port): Maps port 8080 on your host machine to port 8080 inside the Adminer container. The first '8080' is the host port. If port 8080 is already in use, you can change the first number (e.g., "8081:8080") to use a different host port. The second number (container port) should remain 8080 for Adminer.
     depends_on:
-      - mysql_db
-    environment:
-      ADMINER_DEFAULT_SERVER: mysql_db
-      ADMINER_DESIGN: "nette" # A clean and modern theme for the interface
+      - mysql_db # Ensures the 'mysql_db' container starts before 'adminer'.
+    environment: # Environment variables passed to the Adminer container.
+      ADMINER_DEFAULT_SERVER: mysql_db # Specifies the default database server for Adminer. This should match the `container_name` of your MySQL service. Keep this as 'mysql_db' unless you changed the `container_name` of your MySQL service.
+      ADMINER_DESIGN: "nette" # <--- CUSTOMIZABLE: Sets the visual theme for Adminer. You can change this to other available themes like "dracula", "pappu", "default", etc. (e.g., `ADMINER_DESIGN: "dracula"`).
     networks:
-      - mysql-network
+      - mysql-network # Connects the Adminer container to the 'mysql-network'.
 
-volumes:
-  mysql_data:
+volumes: # Defines named volumes for data persistence.
+  mysql_data: # This named volume stores your MySQL database files. Docker manages its location. You generally won't need to change this name unless you have a specific reason.
 
-networks:
-  mysql-network:
+networks: # Defines custom networks for inter-container communication.
+  mysql-network: # This custom network allows 'mysql_db' and 'adminer' to communicate with each other using their service names (e.g., 'mysql_db' as a hostname). You generally won't need to change this name.

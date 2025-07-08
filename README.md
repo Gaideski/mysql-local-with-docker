@@ -1,7 +1,3 @@
-Here is the updated version of the `README.md`, with **Step 2** rewritten for use in a GitHub repository. Now it assumes the user is cloning your repo rather than creating files manually:
-
----
-
 # 🐳 Run MySQL + Adminer Locally with Docker
 
 This project lets you run a MySQL database and a simple admin interface (Adminer) on your computer with **just one command** using Docker. No coding required.
@@ -27,10 +23,35 @@ Or download Docker directly based on your computer type:
 * **macOS (Apple Silicon – M1, M2, M3 chips)**
   👉 [Download for macOS Apple Silicon](https://desktop.docker.com/mac/main/arm64/Docker.dmg)
 
-After installation:
 
-* Open Docker Desktop (you may need to allow permissions or restart your computer)
-* Make sure Docker is **running in the background**
+### After Installation:
+
+* **Open Docker Desktop:**
+    * Locate and launch the Docker Desktop application from your Applications folder (macOS), Start Menu (Windows), or applications launcher (Linux).
+    * You may be prompted to grant necessary permissions or restart your computer to complete the installation process. Follow any on-screen instructions.
+
+* **Verify Docker is Running in the Background:**
+    * Docker Desktop needs to be actively running for Docker commands to work. You can verify its status using a few methods:
+
+    **1. Universal Verification (Recommended for all OS):**
+        * Open your terminal or command prompt.
+        * Run a Docker command that requires communication with the Docker daemon:
+            ```bash
+            docker info
+            ```
+            or
+            ```bash
+            docker ps
+            ```
+        * **If Docker is running:** You will see detailed information about your Docker installation (`docker info`) or a list of running containers (empty if none are running for `docker ps`).
+        * **If Docker is NOT running:** You will typically receive an error message indicating that it cannot connect to the Docker daemon (e.g., "Cannot connect to the Docker daemon. Is the docker daemon running?").
+
+    **2. Visual Verification:**
+        * **macOS:** Look for the Docker whale icon in your macOS menu bar (top right). A solid white/black icon indicates it's running.
+        * **Windows:** Look for the Docker whale icon in your system tray (bottom right, you might need to click the "Show hidden icons" arrow). A solid icon indicates it's running.
+        * **Linux:** Open the Docker Desktop application itself; its user interface will clearly indicate its running status.
+
+    * **If Docker Desktop is not running:** Launch the application again. It might take a moment to start up and initialize.
 
 ---
 
@@ -120,11 +141,8 @@ docker compose down
 
 ## 🗃️ Where Your Data Is Stored
 
-Your MySQL database is saved in a special Docker volume called `mysql_data`. It will not be lost unless you manually delete it.
+Your MySQL database is saved in a special Docker volume called `mysql_data`. It will not be lost unless you manually delete it or call `docker composer down`.
 
 ---
 
-## 💬 Need Help?
-
-If you run into any issues, feel free to [open an issue on GitHub](https://github.com/YOUR-USERNAME/YOUR-REPO-NAME/issues).
 
